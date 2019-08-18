@@ -1,21 +1,29 @@
 public class Point {
-    private double xPos;
-    private double yPos;
+    private int xPos;
+    private int yPos;
 
-    public Point(double x, double y) {
+    public Point(int x, int y) {
         xPos = x;
         yPos = y;
     }
 
-    public double x() {
+    /**
+     * Alternative constructor that makes the point from the floor of the inputs.
+     * Used for finding the coordinates from mouse clicks
+     * @param x: X position of the point
+     * @param y: Y position of the point
+     */
+    public Point(double x, double y) {
+        xPos = (int) Math.floor(x);
+        yPos = (int) Math.floor(y);
+    }
+
+    public int x() {
         return xPos;
     }
 
-    public double y() {
+    public int y() {
         return yPos;
     }
 
-    public static Point round(Point p) {
-        return new Point(Math.floor(p.x()), Math.floor(p.y()));
-    }
 }

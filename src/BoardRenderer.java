@@ -30,4 +30,16 @@ public class BoardRenderer {
         StdDraw.enableDoubleBuffering();
         StdDraw.show();
     }
+
+    /**
+     * Place a stone on the board.
+     * @param p Point to place the stone on the board
+     * @param col Color for the stone
+     */
+    public void printStone(Color col, Point p) {
+        StdDraw.setPenColor(col);
+        StdDraw.filledCircle(p.x() + .5, p.y() + .5, .4);
+        StdDraw.show();
+    }
+
 }

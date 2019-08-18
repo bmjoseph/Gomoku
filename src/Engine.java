@@ -2,17 +2,112 @@ import edu.princeton.cs.introcs.StdDraw;
 import java.awt.Color;
 
 public class Engine {
-    public BoardRenderer board;
+
     private int dim;
     private int turn;
     public Color[] colors = new Color[] {Color.BLACK, Color.WHITE};
+    public Game game;
 
+
+    /**
+     * Initialize a new instance of the game.
+     * @param dimension Number of desired squares on each side of the board.
+     */
     public Engine(int dimension) {
-        board = new BoardRenderer();
         dim = dimension;
         turn = 0;
+        game = new Game(dimension);
     }
 
+
+    /**
+     * Get the color for the current player of the game
+     */
+    private Color getColor() {
+        return colors[turn % 2];
+    }
+
+    /**
+     * Book keep the game state internally
+     * @param p Point to place the stone in the arrays
+     */
+    private void placeStone(Game game, Point p) {
+        if (getColor().equals(Color.BLACK)) {
+            game.blackTiles[p.x()][p.y()] = true;
+        } else {
+            game.whiteTiles[p.x()][p.y()] = true;
+        }
+    }
+
+    /**
+     * Place a stone on the board.
+     * @param p Point to place the stone on the board
+     * @param game Game to place the stone into
+     */
+    private void drawStone(Game game, Point p) {
+        Color currCol = getColor();
+        game.board.printStone(currCol, p);
+    }
+
+
+    private void doTurn(Game game) {
+        Point choice = elicitMove(game);
+        drawStone(game, choice);
+        placeStone(game, choice);
+        turn += 1;
+    }
+
+    public void play() {
+        game = new Game(dim);
+        game.setUpBoard();
+        while (true) {
+            doTurn(game);
+            try {
+                Thread.sleep(500);
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    /**
+     * @return The location of a mouse click on the game board.
+     */
+    private static Point elicitMove(Game game) {
+        while (true) {
+            Point attemptedMove = getClickPoint();
+            if (isValidMove(game, attemptedMove)) {
+                return attemptedMove;
+            }
+        }
+    }
+
+    /**
+     * Decide whether an attempted move is legal.
+     *  A legal move is one that is in the bounds of the game board and not already taken.
+     * @param p Point to try to move
+     * @return True if the move is legal.
+     */
+    private static boolean isValidMove(Game game, Point p) {
+        boolean stillValid = true;
+        // Check if the move in bounds
+        if (p.x() >= (game.dim - 1) | p.y() >= (game.dim - 1)) {
+            stillValid = false;
+        }
+        // Check if the space is taken by black
+        else if (game.blackTiles[p.x()][p.y()]) {
+            stillValid = false;
+        }
+        // Check if the space is taken by white
+        else if (game.whiteTiles[p.x()][p.y()]) {
+            stillValid = false;
+        }
+        return stillValid;
+    }
+
+    /**
+     * @return The location of a mouse click on the game board.
+     */
     private static Point getClickPoint() {
         while (true) {
             if (StdDraw.isMousePressed()) {
@@ -22,25 +117,5 @@ public class Engine {
     }
 
 
-    private void doTurn() {
-        Point choice = getClickPoint();
-        choice = Point.round(choice);
-        Color currColor = colors[turn % 2];
-        StdDraw.setPenColor(currColor);
-        StdDraw.filledCircle(choice.x() + .5, choice.y() + .5, .5);
-        StdDraw.show();
-        try {
-            Thread.sleep(500);
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-    }
 
-    public void play() {
-        board.initialize(dim);
-        while (true) {
-            doTurn();
-            turn += 1;
-        }
-    }
 }
