@@ -22,6 +22,9 @@ public class BoardRenderer {
         for (int i = 0; i < dim; i += 1) {
             StdDraw.line(i, dim, i, 0);
         }
+        for (int j = 0; j < dim; j += 1) {
+            StdDraw.line(0, j, dim, j);
+        }
         StdDraw.enableDoubleBuffering();
         StdDraw.show();
     }
