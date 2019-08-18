@@ -27,6 +27,10 @@ public class Engine {
         return colors[turn % 2];
     }
 
+    private Color getWaitingColor() {
+        return colors[(turn + 1) % 2];
+    }
+
     /**
      * Book keep the game state internally
      * @param p Point to place the stone in the arrays
@@ -49,11 +53,19 @@ public class Engine {
         game.board.printStone(currCol, p);
     }
 
+    private void showWinScreen() {
+        //StdDraw.clear(getColor());
+        StdDraw.setPenColor(getWaitingColor());
+        StdDraw.text(dim / 2, dim / 2, "Game Over");
+        }
 
     private void doTurn(Game game) {
         Point choice = elicitMove(game);
         drawStone(game, choice);
         placeStone(game, choice);
+        if (checkWin(game, choice)) {
+            showWinScreen();
+        }
         turn += 1;
     }
 
@@ -80,6 +92,19 @@ public class Engine {
                 return attemptedMove;
             }
         }
+    }
+
+    private boolean checkWin(Game game, Point move) {
+        //TODO: Implement the checks to see if this move creates a win situation
+        int horizCounter = 1;
+            //if (move.x() + 1 < dim, )
+        return false;
+
+    }
+
+    private boolean checkWin(Boolean[][] tileSet, String direction) {
+        //TODO: Implement
+        return false;
     }
 
     /**
