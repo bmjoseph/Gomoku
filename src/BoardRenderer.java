@@ -7,6 +7,8 @@ public class BoardRenderer {
 
     private int dim;
     private static final int TILE_SIZE = 32;
+    private static final Color BOARD_COLOR = new Color(222,184,135);
+    private static final Color LINE_COLOR = new Color(139,69,19);
 
     /**
      * @param dim: dimension of the game board
@@ -16,8 +18,8 @@ public class BoardRenderer {
         StdDraw.setCanvasSize(dim * TILE_SIZE, dim * TILE_SIZE);
         StdDraw.setXscale(0, dim);
         StdDraw.setYscale(0, dim);
-        StdDraw.clear(new Color(255, 255, 255));
-        StdDraw.setPenColor(Color.BLACK);
+        StdDraw.clear(BOARD_COLOR);
+        StdDraw.setPenColor(LINE_COLOR);
         // Need to draw vertical and horizontal lines
         for (int i = 0; i < dim; i += 1) {
             StdDraw.line(i, dim, i, 0);

@@ -13,20 +13,27 @@ public class Engine {
         turn = 0;
     }
 
-    private void doTurn() {
-        if (StdDraw.isMousePressed()) {
-            double mouseX = StdDraw.mouseX();
-            double mouseY = StdDraw.mouseY();
-            Color currColor = colors[turn % 2];
-            System.out.print(mouseX);
-            System.out.print(",");
-            System.out.println(mouseY);
-            //StdDraw.filledCircle();
-            try {
-                Thread.sleep(1000);      
-            } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
+    private static Point getClickPoint() {
+        while (true) {
+            if (StdDraw.isMousePressed()) {
+                return new Point(StdDraw.mouseX(), StdDraw.mouseY());
             }
+        }
+    }
+
+
+    private void doTurn() {
+        Point choice = getClickPoint();
+        //double mouseX = StdDraw.mouseX();
+        //double mouseY = StdDraw.mouseY();
+        Color currColor = colors[turn % 2];
+        StdDraw.setPenColor(currColor);
+        StdDraw.filledCircle(choice.x(), choice.y(), .5);
+        StdDraw.show();
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -34,6 +41,7 @@ public class Engine {
         board.initialize(dim);
         while (true) {
             doTurn();
+            turn += 1;
         }
     }
 }
