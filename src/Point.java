@@ -14,4 +14,8 @@ public class Point {
     public double y() {
         return yPos;
     }
+
+    public static Point round(Point p) {
+        return new Point(Math.floor(p.x()), Math.floor(p.y()));
+    }
 }

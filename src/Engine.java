@@ -24,14 +24,13 @@ public class Engine {
 
     private void doTurn() {
         Point choice = getClickPoint();
-        //double mouseX = StdDraw.mouseX();
-        //double mouseY = StdDraw.mouseY();
+        choice = Point.round(choice);
         Color currColor = colors[turn % 2];
         StdDraw.setPenColor(currColor);
-        StdDraw.filledCircle(choice.x(), choice.y(), .5);
+        StdDraw.filledCircle(choice.x() + .5, choice.y() + .5, .5);
         StdDraw.show();
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
