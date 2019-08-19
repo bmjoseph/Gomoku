@@ -57,6 +57,7 @@ public class Engine {
         //StdDraw.clear(getColor());
         StdDraw.setPenColor(getWaitingColor());
         StdDraw.text(dim / 2, dim / 2, "Game Over");
+        StdDraw.show();
         }
 
     private void doTurn(Game game) {
@@ -95,15 +96,36 @@ public class Engine {
     }
 
     private boolean checkWin(Game game, Point move) {
-        //TODO: Implement the checks to see if this move creates a win situation
-        int horizCounter = 1;
-            //if (move.x() + 1 < dim, )
+        //TODO: Implement the rest of the checks to see if this move creates a win situation
+        if (turn % 2 == 0) { // Checks if it's black's turn
+            if (checkHorizWin(game.blackTiles, move)) {
+                return true;
+            }
+        }
         return false;
 
     }
 
-    private boolean checkWin(Boolean[][] tileSet, String direction) {
-        //TODO: Implement
+    /**
+     * Decide if the tile just placed results in 5 in a row horizontally.
+     * @param tileSet The current player's owned tile array.
+     * @param move The most recent move position.
+     */
+    private boolean checkHorizWin(Boolean[][] tileSet, Point move) {
+        // Start either at 0 or 4 to the left of move
+        int farthestLeft = Math.max(0, move.x() - 4);
+        int farthestRight = Math.min(dim - 1, move.x() + 4);
+        int conseq = 0;
+        for (int i = farthestLeft; i <= farthestRight; i += 1) {
+            if (tileSet[i][move.y()]) {
+                conseq += 1;
+                if (conseq == 5) {
+                    return true;
+                }
+            } else {
+                conseq = 0;
+            }
+        }
         return false;
     }
 
