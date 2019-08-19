@@ -97,11 +97,14 @@ public class Engine {
 
     private boolean checkWin(Game game, Point move) {
         //TODO: Implement the rest of the checks to see if this move creates a win situation
-        if (turn % 2 == 0) { // Checks if it's black's turn
-            if (checkHorizWin(game.blackTiles, move)) {
-                return true;
-            }
+        Boolean[][] currTileset = game.whiteTiles;
+        if (turn % 2 == 0) {
+            currTileset = game.blackTiles;
         }
+        if (checkHorizWin(currTileset, move)) {
+            return true;
+        }
+
         return false;
 
     }
