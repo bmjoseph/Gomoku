@@ -103,6 +103,11 @@ public class Engine {
         }
         if (checkHorizWin(currTileset, move)) {
             return true;
+        } else if (checkVerticalWin(currTileset, move)) {
+            return true;
+        } else if (checkDiagonalWin(currTileset, move, 1) ||
+                checkDiagonalWin(currTileset, move, -1)) {
+            return true;
         }
 
         return false;
@@ -133,6 +138,62 @@ public class Engine {
     }
 
     /**
+     * Decide if the tile just placed results in 5 in a row horizontally.
+     * @param tileSet The current player's owned tile array.
+     * @param move The most recent move position.
+     */
+    private boolean checkVerticalWin(Boolean[][] tileSet, Point move) {
+        // Start either at 0 or 4 below the move
+        int farthestDown = Math.max(0, move.y() - 4);
+        int farthestUp = Math.min(dim - 1, move.y() + 4);
+        int conseq = 0;
+        for (int i = farthestDown; i <= farthestUp; i += 1) {
+            if (tileSet[move.x()][i]) {
+                conseq += 1;
+                if (conseq == 5) {
+                    return true;
+                }
+            } else {
+                conseq = 0;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Decide if there is a diagonal win condition.
+     * @param tileSet The current player's owned tile array.
+     * @param move The most recent move position.
+     * @param direc 1 to go from upper left to bottom right or -1 to go from upper right to bottom left.
+     * @return True if the game has been won.
+     */
+    private boolean checkDiagonalWin(Boolean[][] tileSet, Point move, int direc) {
+        // Check upper left to bottom right direction
+        int currOffset = -4 * direc;
+        int conseq = 0;
+        for (int i = 0; i < 9; i += 1) { // Need to check 9 total tiles
+            Point testPoint = new Point(move.x() + currOffset, move.y() - (direc * currOffset));
+            // If the point can be checked, check it as usual.
+            if (Point.inBoardBounds(testPoint, dim)) {
+                if (tileSet[testPoint.x()][testPoint.y()]) {
+                    conseq += 1;
+                    if (conseq == 5) {
+                        return true;
+                    }
+                }
+            } else {
+                conseq = 0;
+            }
+            currOffset += direc;
+        }
+
+        // Check upper right to bottom left direction
+
+        return false;
+    }
+
+
+    /**
      * Decide whether an attempted move is legal.
      *  A legal move is one that is in the bounds of the game board and not already taken.
      * @param p Point to try to move
@@ -141,7 +202,7 @@ public class Engine {
     private static boolean isValidMove(Game game, Point p) {
         boolean stillValid = true;
         // Check if the move in bounds
-        if (p.x() >= (game.dim - 1) | p.y() >= (game.dim - 1)) {
+        if (p.x() >= (game.dim) | p.y() >= (game.dim)) {
             stillValid = false;
         }
         // Check if the space is taken by black
@@ -161,6 +222,7 @@ public class Engine {
     private static Point getClickPoint() {
         while (true) {
             if (StdDraw.isMousePressed()) {
+                System.out.println("(" + StdDraw.mouseX() + ", " + StdDraw.mouseY() + ")");
                 return new Point(StdDraw.mouseX(), StdDraw.mouseY());
             }
         }
