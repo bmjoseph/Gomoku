@@ -4,6 +4,7 @@ public class Game {
     public Boolean[][] blackTiles;
     public Boolean[][] whiteTiles;
     public BoardRenderer board;
+    public boolean gameOver = false;
 
     public Game(int dimension) {
         dim = dimension;

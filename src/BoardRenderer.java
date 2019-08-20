@@ -6,7 +6,7 @@ import java.awt.Font;
 public class BoardRenderer {
 
     private int dim;
-    private static final int TILE_SIZE = 32;
+    public static final int TILE_SIZE = 32;
     private static final Color BOARD_COLOR = new Color(222,184,135);
     private static final Color LINE_COLOR = new Color(139,69,19);
 

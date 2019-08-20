@@ -1,5 +1,6 @@
 import edu.princeton.cs.introcs.StdDraw;
 import java.awt.Color;
+import java.awt.Font;
 
 public class Engine {
 
@@ -53,27 +54,45 @@ public class Engine {
         game.board.printStone(currCol, p);
     }
 
+    /**
+     * Decide who just won the game and display a win message.
+     */
     private void showWinScreen() {
-        //StdDraw.clear(getColor());
-        StdDraw.setPenColor(getWaitingColor());
-        StdDraw.text(dim / 2, dim / 2, "Game Over");
+        Color winnerColor = getColor();
+        StdDraw.setPenColor(winnerColor);
+        String winner = "Black";
+        if (winnerColor.equals(Color.WHITE)) {
+            winner = "White";
+        }
+        Font font = new Font("Monaco", Font.BOLD, BoardRenderer.TILE_SIZE - 4);
+        StdDraw.setFont(font);
+        StdDraw.text(dim / 2, dim - .66, "Game Over: " + winner + " wins!");
         StdDraw.show();
         }
 
+    /**
+     * Handles the logic of a single turn.
+     * Elicits a valid move, draws it on the board, and checks if the game is over.
+     * @param game The game being played.
+     */
     private void doTurn(Game game) {
         Point choice = elicitMove(game);
         drawStone(game, choice);
         placeStone(game, choice);
         if (checkWin(game, choice)) {
             showWinScreen();
+            game.gameOver = true;
         }
         turn += 1;
     }
 
+    /**
+     * Set up a new game and wait for moves.
+     */
     public void play() {
         game = new Game(dim);
         game.setUpBoard();
-        while (true) {
+        while (!game.gameOver) {
             doTurn(game);
             try {
                 Thread.sleep(500);
@@ -95,8 +114,13 @@ public class Engine {
         }
     }
 
+    /**
+     * Check if the most recent move caused game to be won.
+     * @param game The current game.
+     * @param move The point of the most recent move.
+     * @return True if the game has been won.
+     */
     private boolean checkWin(Game game, Point move) {
-        //TODO: Implement the rest of the checks to see if this move creates a win situation
         Boolean[][] currTileset = game.whiteTiles;
         if (turn % 2 == 0) {
             currTileset = game.blackTiles;
@@ -161,7 +185,7 @@ public class Engine {
     }
 
     /**
-     * Decide if there is a diagonal win condition.
+     * Decide if the tile just placed results in 5 in a row diagonally.
      * @param tileSet The current player's owned tile array.
      * @param move The most recent move position.
      * @param direc 1 to go from upper left to bottom right or -1 to go from upper right to bottom left.
@@ -186,9 +210,6 @@ public class Engine {
             }
             currOffset += direc;
         }
-
-        // Check upper right to bottom left direction
-
         return false;
     }
 
@@ -222,7 +243,6 @@ public class Engine {
     private static Point getClickPoint() {
         while (true) {
             if (StdDraw.isMousePressed()) {
-                System.out.println("(" + StdDraw.mouseX() + ", " + StdDraw.mouseY() + ")");
                 return new Point(StdDraw.mouseX(), StdDraw.mouseY());
             }
         }
